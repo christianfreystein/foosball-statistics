@@ -19,13 +19,13 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model
-model = YOLO('yolov8n.pt')
+model = YOLO(r"C:\Users\chris\Foosball Detector\runs\detect\train11\weights\best.pt")
 
 # Open the video file
-video_path = r"C:\Users\chris\Foosball Detector\Dramatic Look [y8Kyi0WNg40].mp4"
+video_path = r"C:\Users\chris\Foosball Detector\Struth_Bechtel_Janssen_Stockmanns_middle.mp4"
 cap = cv2.VideoCapture(video_path)
 
-# Loop through the video frames
+# Loop through the video frinference_yolov8.pyames
 while cap.isOpened():
     # Read a frame from the video
     success, frame = cap.read()
