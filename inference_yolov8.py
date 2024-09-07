@@ -19,10 +19,10 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model
-model = YOLO(r"C:\Users\chris\Foosball Detector\runs\detect\train11\weights\best.pt")
+model = YOLO(r"C:\Users\chris\Foosball Detector\weights\yolov9s_foosdetect.pt")
 
 # Open the video file
-video_path = r"C:\Users\chris\Foosball Detector\Struth_Bechtel_Janssen_Stockmanns_middle.mp4"
+video_path = r"C:\Users\chris\Foosball Detector\Open Doubles in Las Vegas  ｜  Tony Spredeman & Björn Hoffmann vs Kevin Romero & Kane Gabriel [QkOvHvFsD_w].webm"
 cap = cv2.VideoCapture(video_path)
 
 # Loop through the video frinference_yolov8.pyames

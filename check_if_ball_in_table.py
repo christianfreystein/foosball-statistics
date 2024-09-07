@@ -30,8 +30,8 @@ def is_point_in_area(px, py, vertices):
 
 def find_y_area(y):
     y_areas = {
-        (61, 162): "Left 2",
-        (162, 209): "Right 0",
+        (61, 170): "Left 2",
+        (170, 209): "Right 0",
         (209, 269): "Left 1",
         (269, 333): "Right 1",
         (333, 415): "Left 0",
@@ -63,8 +63,8 @@ def add_ball_status(data, vertices, image_width, image_height):
 
 
 # Define file paths
-input_file_path = r"C:\Users\chris\Foosball Detector\First analyzed video\Haas_Klabunde_Moreland_Rue_Tracking_Video_long_all_data.json"
-output_file_path = r"C:\Users\chris\Foosball Detector\First analyzed video\Haas_Klabunde_Moreland_Rue_Tracking_Video_long_all_data_with_ball_status.json"
+input_file_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel.json"
+output_file_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel_with_ball_status.json"
 
 # Image dimensions
 image_width = 1280

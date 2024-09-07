@@ -63,8 +63,8 @@ def process_tracking_data(data, fps=60):
 
 
 # Define file paths
-input_file_path = r"C:\Users\chris\Foosball Detector\First analyzed video\Haas_Klabunde_Moreland_Rue_Tracking_Video_long_all_data_with_ball_status.json"
-output_file_path = r"C:\Users\chris\Foosball Detector\First analyzed video\ball_status_times.txt"
+input_file_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel_with_ball_status.json"
+output_file_path = r"C:\Users\chris\Foosball Detector\ball_status_times.txt"
 
 # Load the JSON data from the file
 data = read_json(input_file_path)
