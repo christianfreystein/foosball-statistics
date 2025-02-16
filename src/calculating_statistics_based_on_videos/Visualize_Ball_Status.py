@@ -2,9 +2,9 @@ import cv2
 import json
 
 # File paths
-data_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel_with_ball_status.json"
-input_video_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel.mp4"
-output_video_path = r"C:\Users\chris\foosball-statistics\Spredeman_Hoffmann_Romero_Gabriel_with_ball_status.mp4"
+data_path = r"/Second_Prototype_without_Impossible_Westermann_Bade_Hoffmann_Spredeman_with_ball_status.json"
+input_video_path = r"/Westermann Bade VS Hoffmann Spredeman [1sBcrUBZxlY].mp4"
+output_video_path = r"/Second_Prototype_without_Impossible_Westermann_Bade_Hoffmann_Spredeman_with_ball_status.mp4"
 # Color mapping for ball status
 status_color_mapping = {
     "Left 2": (0, 0, 255),   # Red

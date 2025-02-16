@@ -18,11 +18,16 @@ import matplotlib.pyplot as plt
 import cv2
 from ultralytics import YOLO
 
-# Load the YOLOv8 model
-model = YOLO(r"C:\Users\chris\Foosball Detector\weights\yolov9s_foosdetect.pt")
+import os
+# Set the CUDA_MODULE_LOADING environment variable to LAZY
+os.environ['CUDA_MODULE_LOADING'] = 'LAZY'
+
+# Load the YOLOv8 model#
+model = YOLO(r"C:\Users\chris\foosball-statistics\runs\detect\train2\weights\best.engine")
+# model = YOLO(r"C:\Users\chris\foosball-statistics\runs\detect\train_old\weights\best.pt")
 
 # Open the video file
-video_path = r"C:\Users\chris\Foosball Detector\Open Doubles in Las Vegas  ｜  Tony Spredeman & Björn Hoffmann vs Kevin Romero & Kane Gabriel [QkOvHvFsD_w].webm"
+video_path = r"C:\Users\chris\Videos\Westermann Bade VS Hoffmann Spredeman [1sBcrUBZxlY].mp4"
 cap = cv2.VideoCapture(video_path)
 
 # Loop through the video frinference_yolov8.pyames
@@ -35,7 +40,7 @@ while cap.isOpened():
         results = model(frame)
 
         # Visualize the results on the frame
-        annotated_frame = results[0].plot()
+        annotated_frame = results[0].plot(labels=False, probs=False)
 
         # Display the annotated frame
         cv2.imshow("YOLOv8 Inference", annotated_frame)

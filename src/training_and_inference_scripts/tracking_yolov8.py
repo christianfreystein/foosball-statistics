@@ -8,12 +8,12 @@ import json
 import pickle
 
 # Define paths
-model_path = r"C:\Users\chris\Foosball Detector\runs\detect\train20\weights\best.pt"
-video_path = r"C:\Users\chris\Videos\vegas-thomas-haas-sarah-klabunde-vs-brandon-moreland-sullivan-rue-gz4kj_cO5Iqjuc.mp4"
-final_output_video_path = "test_test.mp4"
+model_path = r"/runs/detect/train2/weights/best.pt"
+video_path = r"C:\Users\chris\Videos\Tablesoccer.TV - Struth⧸Uhlemann vs Heinrich⧸Wahle.mp4"
+final_output_video_path = "../../Second_Prototype_Heinrich_Wahle_Struth_Uhlemann.mp4"
 # video_path = r"C:\Users\chris\Foosball Detector\test_analyzed_video\Vegas_Haas_Klabunde_Moreland_Rue_short_video_test.mp4"
 # final_output_video_path = "testaarlardfdfdfdf.mp4"
-annotated_video_path = "output_video.avi"
+annotated_video_path = "../../output_video.avi"
 json_path = final_output_video_path.replace(".mp4", ".json")
 
 #Load the YOLOv8 model

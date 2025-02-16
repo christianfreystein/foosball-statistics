@@ -10,10 +10,10 @@ from ultralytics import YOLO
 from moviepy.editor import VideoFileClip
 
 # Define paths
-model_path = r"C:\Users\chris\Foosball Detector\weights\yolov9s_foosdetect.pt"
-video_path = r"C:\Users\chris\Videos\vegas-thomas-haas-sarah-klabunde-vs-brandon-moreland-sullivan-rue-gz4kj_cO5Iqjuc.mp4"
-annotated_video_path = "output_video.avi"
-final_output_video_path = "Vegas_Haas_Klabunde_Moreland_Rue_Long_Video_test_yolov9  .mp4"
+model_path = r"C:\Users\chris\Foosball Detector\runs\detect\train23\weights\best.pt"
+video_path = r"C:\Users\chris\Videos\Vegas  ｜  Thomas Haas & Sarah Klabunde vs Brandon Moreland & Sullivan Rue [Gz4kJPnpHXg].mp4"
+annotated_video_path = "../../output_video.avi"
+final_output_video_path = "Vegas_Haas_Klabunde_Moreland_Rue_Long_Video.mp4"
 json_path = final_output_video_path.replace(".mp4", ".json")
 temp_dir = "temp_predictions"
 
