@@ -1,3 +1,5 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/home/freystec/foosball-statistics/.venv
+.venv/
