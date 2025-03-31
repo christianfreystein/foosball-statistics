@@ -10,12 +10,12 @@ from ultralytics import YOLO
 from moviepy.editor import VideoFileClip
 
 # Define paths
-model_path = r"C:\Users\chris\Foosball Detector\runs\detect\train23\weights\best.pt"
-video_path = r"C:\Users\chris\Videos\Vegas  ｜  Thomas Haas & Sarah Klabunde vs Brandon Moreland & Sullivan Rue [Gz4kJPnpHXg].mp4"
+model_path = r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\runs\detect\train11\weights\yolov8m_imgsz_1280_with_topview_Leonhart_best.pt"
+video_path = r"D:\Difficult Sequences\Bonzini_Beispiel.mp4"
 annotated_video_path = "../../output_video.avi"
-final_output_video_path = "Vegas_Haas_Klabunde_Moreland_Rue_Long_Video.mp4"
+final_output_video_path = "Bonzini_Beispiel_imgsz1280_yolov8m_detection.mp4"
 json_path = final_output_video_path.replace(".mp4", ".json")
-temp_dir = "temp_predictions"
+temp_dir = "../old/temp_predictions"
 
 # Create the temporary directory for saving intermediate predictions
 if not os.path.exists(temp_dir):
@@ -60,7 +60,7 @@ while cap.isOpened():
         inference_speed = results[0].speed
 
         # Visualize the results on the frame (annotate)
-        annotated_frame = results[0].plot(labels=False, conf=False)
+        annotated_frame = results[0].plot(labels=False, conf=True)
 
         # Write the annotated frame to the output video
         out.write(annotated_frame)

@@ -8,9 +8,10 @@ import json
 import pickle
 
 # Define paths
-model_path = r"/runs/detect/train2/weights/best.pt"
-video_path = r"C:\Users\chris\Videos\Tablesoccer.TV - Struth⧸Uhlemann vs Heinrich⧸Wahle.mp4"
-final_output_video_path = "../../Second_Prototype_Heinrich_Wahle_Struth_Uhlemann.mp4"
+# model_path = r"C:\Users\chris\foosball-statistics\weights\ai_foosball_leonhart_yolo11s_base.pt"
+model_path = r"C:\Users\chris\foosball-statistics\runs\detect\train5\weights\best_run5.pt"
+video_path = r"C:\Users\chris\foosball-statistics\Leonhart_clip.mp4"
+final_output_video_path = r"C:\Users\chris\foosball-statistics\Leonhart_clip_640_yolov8m_without_impossible_tracking.mp4"
 # video_path = r"C:\Users\chris\Foosball Detector\test_analyzed_video\Vegas_Haas_Klabunde_Moreland_Rue_short_video_test.mp4"
 # final_output_video_path = "testaarlardfdfdfdf.mp4"
 annotated_video_path = "../../output_video.avi"
@@ -59,7 +60,7 @@ while cap.isOpened():
 
     if success:
         # Run YOLOv8 tracking on the frame, persisting tracks between frames
-        results = model.track(frame, persist=True)
+        results = model.track(frame, persist=True, tracker=r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\botsort.yaml")
 
         # Extract additional information
         inference_speed = results[0].speed
@@ -124,9 +125,9 @@ while cap.isOpened():
                 cv2.polylines(annotated_frame, [points], isClosed=False, color=(0, 255, 255), thickness=4)
 
         # # Display the annotated frame
-        # cv2.imshow("YOLOv8 Tracking", annotated_frame)
+        cv2.imshow("YOLOv8 Tracking", annotated_frame)
 
-        out.write(annotated_frame)
+        # out.write(annotated_frame)
 
         # Initialize the frame's prediction data
         frame_data = {

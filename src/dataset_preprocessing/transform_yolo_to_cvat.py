@@ -1,10 +1,10 @@
 import os
 
 # Define the folder containing the .txt files
-folder_path = r"D:\labels\bratzdrum_labels_train\obj_train_data"
+folder_path = r"D:\New_Big_Foosball_Dataset\topview_leo_championship_end_match1_dataset\topview_leo_championship_match1\labels\labels"
 
 # Define the output file path
-output_file_path = 'output.txt'
+output_file_path = 'train.txt'
 
 # Define the prefix for the image paths
 prefix = 'data/obj_train_data/'
