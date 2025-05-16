@@ -2,11 +2,11 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv11 model
-model = YOLO(r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\runs\detect\train2\weights\best.pt")  # Ensure you have the correct model file
+model = YOLO("/home/freystec/foosball-statistics/weights/ai_foosball_yolo11n_KD_epoch24.pt")  # Ensure you have the correct model file
 
 # Open video file
-input_video_path = r"D:\Foosball Detector\videos\Bundesliga_2024_Bamberg_Kicker_Crew_Bonn.mp4"
-output_video_path = "output.mp4"
+input_video_path = "/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip.mp4"
+output_video_path = "yolov11m_Leonhart_Topview_Test_video_destilled.mp4"
 cap = cv2.VideoCapture(input_video_path)
 
 # Get video properties

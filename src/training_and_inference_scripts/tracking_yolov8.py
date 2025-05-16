@@ -2,19 +2,22 @@ from collections import defaultdict
 import cv2
 import numpy as np
 from ultralytics import YOLO
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import time
 import json
 import pickle
 
 # Define paths
 # model_path = r"C:\Users\chris\foosball-statistics\weights\ai_foosball_leonhart_yolo11s_base.pt"
-model_path = r"C:\Users\chris\foosball-statistics\runs\detect\train5\weights\best_run5.pt"
-video_path = r"C:\Users\chris\foosball-statistics\Leonhart_clip.mp4"
-final_output_video_path = r"C:\Users\chris\foosball-statistics\Leonhart_clip_640_yolov8m_without_impossible_tracking.mp4"
+model_path = "/home/freystec/foosball-statistics/weights/yolov8n_base_ball(slow)_best.pt"
+model_path = "/home/freystec/foosball-statistics/weights/ai_foosball_leonhart_yolo11s_base.pt"
+model_path = "/home/freystec/foosball-statistics/weights/ai_foosball_leonhart_yolo11s_base.engine"
+video_path = "/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip.mp4"
+# video_path = "/home/freystec/foosball-statistics/extremely_short_test_video.avi"
+final_output_video_path = "/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip_test.mp4"
 # video_path = r"C:\Users\chris\Foosball Detector\test_analyzed_video\Vegas_Haas_Klabunde_Moreland_Rue_short_video_test.mp4"
 # final_output_video_path = "testaarlardfdfdfdf.mp4"
-annotated_video_path = "../../output_video.avi"
+annotated_video_path = "output_video.avi"
 json_path = final_output_video_path.replace(".mp4", ".json")
 
 #Load the YOLOv8 model
@@ -60,7 +63,7 @@ while cap.isOpened():
 
     if success:
         # Run YOLOv8 tracking on the frame, persisting tracks between frames
-        results = model.track(frame, persist=True, tracker=r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\botsort.yaml")
+        results = model.track(frame, persist=True, tracker="/home/freystec/foosball-statistics/src/training_and_inference_scripts/botsort.yaml")
 
         # Extract additional information
         inference_speed = results[0].speed
@@ -127,7 +130,7 @@ while cap.isOpened():
         # # Display the annotated frame
         cv2.imshow("YOLOv8 Tracking", annotated_frame)
 
-        # out.write(annotated_frame)
+        out.write(annotated_frame)
 
         # Initialize the frame's prediction data
         frame_data = {
@@ -187,7 +190,7 @@ processed_video = VideoFileClip(annotated_video_path)
 original_video = VideoFileClip(video_path)
 
 # Set the audio of the processed video to be the audio of the original video
-processed_video = processed_video.set_audio(original_video.audio)
+processed_video = processed_video.with_audio(original_video.audio)
 
 # Save the result
 processed_video.write_videofile(final_output_video_path, codec='libx264', audio_codec='aac')

@@ -7,15 +7,17 @@ from collections import defaultdict
 
 import cv2
 from ultralytics import YOLO
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 # Define paths
-model_path = r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\runs\detect\train11\weights\yolov8m_imgsz_1280_with_topview_Leonhart_best.pt"
-video_path = r"D:\Difficult Sequences\Bonzini_Beispiel.mp4"
-annotated_video_path = "../../output_video.avi"
-final_output_video_path = "Bonzini_Beispiel_imgsz1280_yolov8m_detection.mp4"
+# model_path = r"C:\Users\chris\foosball-statistics\src\training_and_inference_scripts\runs\detect\train11\weights\yolov8m_imgsz_1280_with_topview_Leonhart_best.pt"
+model_path = "/home/freystec/foosball-statistics/weights/yolov8n_base_ball(slow)_best.pt"
+# video_path = r"D:\Difficult Sequences\Bonzini_Beispiel.mp4"
+video_path = "/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip.mp4"
+annotated_video_path = "output_video.avi"
+final_output_video_path = "test.mp4"
 json_path = final_output_video_path.replace(".mp4", ".json")
-temp_dir = "../old/temp_predictions"
+temp_dir = "old/temp_predictions"
 
 # Create the temporary directory for saving intermediate predictions
 if not os.path.exists(temp_dir):

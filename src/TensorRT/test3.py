@@ -12,7 +12,7 @@ import os
 # Set the CUDA_MODULE_LOADING environment variable to LAZY
 from ultralytics import YOLO
 os.environ['CUDA_MODULE_LOADING'] = 'LAZY'
-model = YOLO(r"/runs/detect/train5/weights/best_run5.pt")
+model = YOLO("/home/freystec/foosball-statistics/weights/yolov8n_base_ball(slow)_best.pt")
 # model.export(
 #     format="engine",
 #     dynamic=True,
@@ -25,9 +25,12 @@ model = YOLO(r"/runs/detect/train5/weights/best_run5.pt")
 model.export(
     format="engine",
     dynamic=True,
-    batch=8,
-    workspace=4,
-    half=True
+    batch=16,
+    workspace=None,
+    half=True,
+    int8=False,
+    data="/home/freystec/Second_Prototype_Dataset_with_Leonhart_Topview_Data/dataset.yaml",
+    fraction=1.0
 )
 
 

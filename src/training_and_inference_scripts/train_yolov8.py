@@ -2,11 +2,11 @@ from ultralytics import YOLO
 
 
 def main():
-    model = YOLO(r"D:\Foosball Detector\runs\detect\train23\weights\best_imgsz_1280.pt")  # load a pretrained model (recommended for training)
+    model = YOLO("/home/freystec/foosball-statistics/weights/yolo11m.pt")  # load a pretrained model (recommended for training)
 
     # Train the model
     results = model.train(
-        data=r"D:\New_Big_Foosball_Dataset\Second_Prototype_Dataset_with_Leonhart_Topview_Data\dataset.yaml", epochs=50,
+        data="/home/freystec/Foosball_Datasets/Second_Prototype_Dataset_with_Leonhart_Topview_Data/dataset.yaml", epochs=50,
         imgsz=1280, batch=4)
 
 
