@@ -1,6 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/.venv/
-/foosball-videos/
-/weights/
+.venv/
+foosball-videos/
+weights/
+foosball-statistics-Nikolai-Berlin/
+runs/
+Performance Videos/
