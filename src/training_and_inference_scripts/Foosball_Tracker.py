@@ -63,9 +63,9 @@ class BallTracker:
         return detections[[index]]
 
 
-model = YOLO(r"C:\Users\chris\foosball-statistics\runs\detect\train5\weights\best_run5.pt")
-source_path = (r"C:\Users\chris\foosball-statistics\Leonhart_clip - Kopie.mp4")
-target_path = (r"C:\Users\chris\foosball-statistics\Leonhart_clip_test.mp4")
+model = YOLO(r"/home/freystec/repositories/yolo-distiller/runs/detect/train/weights/yolov11n_with_KD_cropped.pt")
+source_path = (r"/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip.mp4")
+target_path = (r"/home/freystec/yolo11n_imgsz640_tracking_test.mp4")
 video_info = sv.VideoInfo.from_video_path(source_path)
 frame_generator = sv.get_video_frames_generator(source_path)
 w, h = video_info.width, video_info.height

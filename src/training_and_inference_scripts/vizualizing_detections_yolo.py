@@ -2,11 +2,11 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv11 model
-model = YOLO("/home/freystec/foosball-statistics/weights/ai_foosball_yolo11n_KD_epoch24.pt")  # Ensure you have the correct model file
-
+# model = YOLO("/home/freystec/foosball-statistics/weights/ai_foosball_yolo11n_KD_epoch24.pt")  # Ensure you have the correct model file
+model = YOLO("/home/freystec/foosball-statistics/runs/detect/train5/weights/best.pt")
 # Open video file
 input_video_path = "/home/freystec/foosball-statistics/foosball-videos/Leonhart_clip.mp4"
-output_video_path = "yolov11m_Leonhart_Topview_Test_video_destilled.mp4"
+output_video_path = "yolov11n_Leonhart_Topview_Test_video_undestilled_640.mp4"
 cap = cv2.VideoCapture(input_video_path)
 
 # Get video properties
@@ -22,7 +22,7 @@ while cap.isOpened():
         break
 
     # Make YOLO predictions
-    results = model(frame)
+    results = model(frame, conf=0.5)
 
     # Draw bounding boxes on the frame
     for result in results:

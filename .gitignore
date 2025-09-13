@@ -1,6 +1,6 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-.venv/
-foosball-videos/
-weights/
+/.venv/
+/foosball-videos/
+/weights/
