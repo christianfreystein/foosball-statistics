@@ -65,6 +65,7 @@ start_time = time.time()
 with sv.VideoSink(annotated_video_path, video_info=video_info) as sink:
     # Loop through the video frames using the generator with tqdm for progress
     for frame_idx, frame in enumerate(tqdm(frame_generator, total=video_info.total_frames, desc="Processing Video")):
+
         # --- Crop the frame for prediction ---
         cropped_frame = frame[crop_top : height - crop_bottom, crop_left : width - crop_right]
 
