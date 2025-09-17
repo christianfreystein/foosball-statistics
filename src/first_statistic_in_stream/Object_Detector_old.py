@@ -2,11 +2,10 @@ import json
 import os
 import time
 import contextlib
-from datetime import datetime
 
 import cv2
 from ultralytics import YOLO
-from moviepy import VideoFileClip
+from moviepy import VideoFileClip  # Corrected import statement
 import numpy as np
 
 import supervision as sv
@@ -46,7 +45,7 @@ class Detector:
             frame (np.array): A single video frame.
 
         Returns:
-            dict: A dictionary of detection and speed results.
+            dict: A dictionary of detection results with adjusted coordinates.
         """
         original_height, original_width, _ = frame.shape
         cropped_frame = self._preprocess_frame(frame)
@@ -90,18 +89,18 @@ class Detector:
             })
 
         return {
-            "inference_speed_ms": inference_speed,
-            "detections": detections,
+            "inference_speed": inference_speed,
+            "boxes": detections,
             "original_frame_dims": [original_width, original_height]
         }
 
 
-def _annotate_frame(frame, detections):
+def _annotate_frame(frame, frame_data):
     """Draws bounding boxes and labels on a frame based on detection data."""
     annotated_frame = frame.copy()
-    original_height, original_width, _ = annotated_frame.shape
+    original_width, original_height = frame_data.get("original_frame_dims")
 
-    for box_data in detections:
+    for box_data in frame_data["boxes"]:
         bbox_norm = box_data["bbox"]
         conf = box_data["conf"]
         cls = box_data["cls"]
@@ -134,22 +133,6 @@ def process_video(video_path, detector, save_json=True, save_annotated_video=Fal
     video_info = sv.VideoInfo.from_video_path(video_path)
     frame_generator = sv.get_video_frames_generator(video_path)
 
-    full_data = {
-        "_metadata_": {
-            "video_path": video_path,
-            "processing_date": datetime.now().isoformat() + "Z",
-            "original_frame_dims": [video_info.width, video_info.height],
-            "fps": video_info.fps,
-            "average_inference_speed_ms": {
-                "preprocess": 0.0,
-                "inference": 0.0,
-                "postprocess": 0.0
-            }
-        },
-        "frames": []
-    }
-
-    total_speed = {"preprocess": 0.0, "inference": 0.0, "postprocess": 0.0}
     predictions = []
     frames = []
 
@@ -162,39 +145,20 @@ def process_video(video_path, detector, save_json=True, save_annotated_video=Fal
         for frame_idx, frame in enumerate(
                 tqdm(frame_generator, total=video_info.total_frames, desc="Processing Video")):
             frame_data = detector.process_frame(frame)
-
-            # Accumulate speeds for average calculation
-            for key in total_speed.keys():
-                total_speed[key] += frame_data["inference_speed_ms"][key]
-
-            # Create the frame-specific object
-            frame_object = {
-                "frame_count": frame_idx,
-                "inference_speed_ms": frame_data["inference_speed_ms"],
-                "detections": frame_data["detections"],
-                "match_status": "unknown",  # To be determined by another function
-                "tracked_balls": []  # To be filled by the tracker
-            }
-            full_data["frames"].append(frame_object)
-            predictions.append(frame_object)
-            frames.append(frame)
+            frame_data["frame_count"] = frame_idx
+            predictions.append(frame_data)
+            frames.append(frame)  # Store the original frame
 
             if save_annotated_video:
-                annotated_frame = _annotate_frame(frame, frame_data["detections"])
+                annotated_frame = _annotate_frame(frame, frame_data)
                 sink.write_frame(annotated_frame)
-
-    # Calculate and store average speeds
-    num_frames = len(full_data["frames"])
-    if num_frames > 0:
-        for key in total_speed.keys():
-            full_data["_metadata_"]["average_inference_speed_ms"][key] = total_speed[key] / num_frames
 
     if save_json:
         with open(json_path, "w") as f:
-            json.dump(full_data, f, indent=4)
+            json.dump(predictions, f, indent=4)
             print(f"Predictions saved to {json_path}")
 
-    return full_data, frames
+    return predictions, frames
 
 
 def process_image_folder(folder_path, detector, save_json=True, save_annotated_images=False, output_folder=None,
@@ -210,31 +174,6 @@ def process_image_folder(folder_path, detector, save_json=True, save_annotated_i
     image_files = sorted([os.path.join(folder_path, f) for f in os.listdir(folder_path) if
                           f.lower().endswith(('.png', '.jpg', '.jpeg'))])
 
-    if not image_files:
-        print("No images found in the specified folder.")
-        return [], []
-
-    first_frame = cv2.imread(image_files[0])
-    if first_frame is None:
-        raise IOError(f"Could not read the first image file: {image_files[0]}")
-    height, width, _ = first_frame.shape
-
-    full_data = {
-        "_metadata_": {
-            "folder_path": folder_path,
-            "processing_date": datetime.now().isoformat() + "Z",
-            "original_frame_dims": [width, height],
-            "fps": None,  # FPS is not applicable to a folder of static images
-            "average_inference_speed_ms": {
-                "preprocess": 0.0,
-                "inference": 0.0,
-                "postprocess": 0.0
-            }
-        },
-        "frames": []
-    }
-
-    total_speed = {"preprocess": 0.0, "inference": 0.0, "postprocess": 0.0}
     predictions = []
     frames = []
 
@@ -244,160 +183,79 @@ def process_image_folder(folder_path, detector, save_json=True, save_annotated_i
             continue
 
         image_data = detector.process_frame(frame)
-
-        # Accumulate speeds for average calculation
-        for key in total_speed.keys():
-            total_speed[key] += image_data["inference_speed_ms"][key]
-
-        frame_object = {
-            "filename": os.path.basename(image_path),
-            "inference_speed_ms": image_data["inference_speed_ms"],
-            "detections": image_data["detections"],
-            "match_status": "unknown",  # To be determined by another function
-            "tracked_balls": []  # To be filled by the tracker
-        }
-
-        full_data["frames"].append(frame_object)
-        predictions.append(frame_object)
-        frames.append(frame)
+        image_data["filename"] = os.path.basename(image_path)
+        predictions.append(image_data)
+        frames.append(frame)  # Store the original frame
 
         if save_annotated_images:
-            annotated_frame = _annotate_frame(frame, image_data["detections"])
+            annotated_frame = _annotate_frame(frame, image_data)
             output_image_path = os.path.join(output_folder, os.path.basename(image_path))
             cv2.imwrite(output_image_path, annotated_frame)
 
-    # Calculate and store average speeds
-    num_frames = len(full_data["frames"])
-    if num_frames > 0:
-        for key in total_speed.keys():
-            full_data["_metadata_"]["average_inference_speed_ms"][key] = total_speed[key] / num_frames
-
     if save_json:
         with open(json_path, "w") as f:
-            json.dump(full_data, f, indent=4)
+            json.dump(predictions, f, indent=4)
             print(f"Predictions saved to {json_path}")
 
-    return full_data, frames
+    return predictions, frames
 
 
-def process_stream(stream_source, detector, save_annotated_video=False, output_video_path=None):
+def process_stream(stream_source, detector):
     """
-    Processes a video stream frame by frame with optional video saving.
+    Processes a video stream frame by frame.
+
+    Args:
+        stream_source (int or str): The source of the stream (e.g., 0 for a webcam, a URL for a network stream).
+        detector (Detector): An instance of the Detector class.
+
+    Returns:
+        tuple: A tuple containing a list of predictions and a list of frames.
     """
     cap = cv2.VideoCapture(stream_source)
     if not cap.isOpened():
         print("Error: Could not open video stream.")
         return [], []
 
-    if save_annotated_video and not output_video_path:
-        raise ValueError("output_video_path must be specified when save_annotated_video is True.")
-
-    first_frame = None
-    frame_width = 0
-    frame_height = 0
-    fps = 0
-    video_writer = None
-
-    # We need to capture the first frame to get dimensions and FPS
-    ret, first_frame = cap.read()
-    if not ret:
-        print("Error: Could not read the first frame from the stream.")
-        cap.release()
-        return [], []
-
-    frame_height, frame_width, _ = first_frame.shape
-    fps = cap.get(cv2.CAP_PROP_FPS)
-
-    full_data = {
-        "_metadata_": {
-            "stream_source": stream_source,
-            "processing_date": datetime.now().isoformat() + "Z",
-            "original_frame_dims": [frame_width, frame_height],
-            "fps": fps if fps > 0 else 30.0,  # Use a default FPS if it's not available
-            "average_inference_speed_ms": {
-                "preprocess": 0.0,
-                "inference": 0.0,
-                "postprocess": 0.0
-            }
-        },
-        "frames": []
-    }
-
-    total_speed = {"preprocess": 0.0, "inference": 0.0, "postprocess": 0.0}
+    predictions = []
     frames = []
     frame_idx = 0
 
     try:
-        if save_annotated_video:
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            video_writer = cv2.VideoWriter(output_video_path, fourcc, full_data["_metadata_"]["fps"],
-                                           (frame_width, frame_height))
-
-        # Process the first frame
-        frame_data = detector.process_frame(first_frame)
-        for key in total_speed.keys():
-            total_speed[key] += frame_data["inference_speed_ms"][key]
-        frame_object = {
-            "frame_count": frame_idx,
-            "inference_speed_ms": frame_data["inference_speed_ms"],
-            "detections": frame_data["detections"],
-            "match_status": "unknown",
-            "tracked_balls": []
-        }
-        full_data["frames"].append(frame_object)
-        frames.append(first_frame)
-        annotated_frame = _annotate_frame(first_frame, frame_data["detections"])
-        if save_annotated_video and video_writer:
-            video_writer.write(annotated_frame)
-        frame_idx += 1
-
         while True:
             ret, frame = cap.read()
             if not ret:
+                # Break the loop if reading a frame fails (end of stream or error)
                 break
 
+            # Process the frame using the detector
             frame_data = detector.process_frame(frame)
-            for key in total_speed.keys():
-                total_speed[key] += frame_data["inference_speed_ms"][key]
-            frame_object = {
-                "frame_count": frame_idx,
-                "inference_speed_ms": frame_data["inference_speed_ms"],
-                "detections": frame_data["detections"],
-                "match_status": "unknown",
-                "tracked_balls": []
-            }
-            full_data["frames"].append(frame_object)
-            frames.append(frame)
-            annotated_frame = _annotate_frame(frame, frame_data["detections"])
+            frame_data["frame_count"] = frame_idx
+            predictions.append(frame_data)
+            frames.append(frame)  # Store the original frame
 
-            if save_annotated_video and video_writer:
-                video_writer.write(annotated_frame)
+            # Optional: Display the frame in a window
+            annotated_frame = _annotate_frame(frame, frame_data)
+            cv2.imshow('Live Stream', annotated_frame)
 
+            # Break the loop if 'q' is pressed
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
             frame_idx += 1
 
     finally:
-        if video_writer:
-            video_writer.release()
         cap.release()
         cv2.destroyAllWindows()
 
-    num_frames = len(full_data["frames"])
-    if num_frames > 0:
-        for key in total_speed.keys():
-            full_data["_metadata_"]["average_inference_speed_ms"][key] = total_speed[key] / num_frames
-
-    return full_data, frames
+    return predictions, frames
 
 
 if __name__ == "__main__":
     # Define paths
     model_path = r"C:\Users\chris\foosball-statistics\weights\yolov11n_imgsz640_Topview.pt"
     video_path = r"C:\Users\chris\foosball-statistics\foosball-videos\SideKick Harburg - SiMo Doppel  05.08.2025.mp4"
-    json_path = "output_predictions_test.json"
-    annotated_video_path = "output_video_annotated_test.mp4"
+    json_path = "output_predictions.json"
+    annotated_video_path = "output_video_annotated.mp4"
 
     # Define crop parameters
     crop_params = {'left': 300, 'right': 300, 'top': 0, 'bottom': 0}
@@ -408,8 +266,7 @@ if __name__ == "__main__":
     start_time = time.time()
 
     # Process the video
-    # Note: process_video now returns a dictionary and the list of frames
-    full_data, loaded_frames = process_video(
+    predictions_list, loaded_frames = process_video(
         video_path=video_path,
         detector=detector,
         save_json=True,

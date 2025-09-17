@@ -496,7 +496,7 @@ def visualize_tracking_on_video(video_path: str = None, frames: list = None, fps
 
 if __name__ == "__main__":
     # --- Configuration ---
-    input_video_path = r"C:\Users\chris\foosball-statistics\src\first_statistic_in_stream\output_video.mp4"
+    input_video_path = r"C:\Users\chris\foosball-statistics\foosball-videos\SideKick Harburg - SiMo Doppel  05.08.2025.mp4"
     detection_json_path = r"C:\Users\chris\foosball-statistics\src\first_statistic_in_stream\output_predictions.json"
     output_video_path = r"SiMo_yolov11n_imgsz_640_tracked_test_2.mp4"
     output_tracked_json_path = r"SiMo_yolov11n_imgsz_640_short_tracked_test_2.json"

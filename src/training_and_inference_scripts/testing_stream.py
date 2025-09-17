@@ -5,7 +5,7 @@ import torch
 # --- Konfiguration ---
 # Die URL muss den Stream-Schlüssel einschließen, der in OBS verwendet wird.
 rtmp_url = 'rtmp://localhost/live/teststream'
-model_path = r"/home/freystec/foosball-statistics/weights/edge_detection_Nikolai.pt"
+model_path = r"C:\Users\chris\foosball-statistics\weights\yolov11n_imgsz640_Topview.pt"
 
 # --- Skript ---
 # Check if a GPU is available and use it, otherwise fall back to CPU.
